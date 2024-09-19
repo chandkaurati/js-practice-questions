@@ -94,23 +94,77 @@ const user = {
 };
 // checkPassword(user.loginSuccesFull.bind(user), user.loginFailed.bind(user));
 
-
 // partial application for login function
 
-function checkpass(ok, fail){
-   let password = prompt("enter the password")
-   if(password === "chand"){
-    ok()
-   }else{
-    fail()
-   }
-}
-
-const user1 ={
-  name : "chandkaurati",
-
-  login(result){
-    console.log(this.name + (result ? "login successful" : "login failed"))
+function checkpass(ok, fail) {
+  let password = prompt("enter the password");
+  if (password === "chand") {
+    ok();
+  } else {
+    fail();
   }
 }
-checkpass(user1.login.bind(user, true), user1.login.bind(user, false))
+
+const user1 = {
+  name: "chandkaurati",
+
+  login(result) {
+    console.log(this.name + (result ? "login successful" : "login failed"));
+  },
+};
+// checkpass(user1.login.bind(user, true), user1.login.bind(user, false));
+
+// PolyFills
+
+//  ##call polyfill
+
+const player = {
+  name: "virat",
+  run: "5353",
+  isNotOut: false,
+};
+
+function getDetails(strikerate, sixes, fours) {
+  console.log(
+    `the player ${this.name} is not out with strike rate of ${strikerate} , with  ${sixes} sixed and  ${fours} fours`
+  );
+}
+Function.prototype.myCall = function (context = {}, ...args) {
+  if (typeof this !== "function") {
+    throw new Error("this is not callable");
+  }
+  context.fn = this;
+  context.fn(...args);
+};
+
+// getDetails.myCall(player, "3.66")
+
+Function.prototype.myApplay = function (context = {}, args = []) {
+  if (typeof this !== "function") {
+    throw new Error("myApply is not callable");
+  }
+
+  if(!Array.isArray(args)){
+     throw new Error("plese provide list as an argument")
+  }
+
+  context.fn = this;
+  context.fn(...args);
+};
+
+// getDetails.myApplay(player, ["2.422", "554", "53532"]);
+
+Function.prototype.myBind = function(context = {}, ...args){
+  if (typeof this !== "function") {
+    throw new Error("myApply is not callable");
+  }
+
+  context.fn = this
+  return function(...newArgs){
+    return context.fn(...args, ...newArgs)
+  }
+
+}
+
+const fn =   getDetails.myBind(player)
+console.log(fn(235,353,523))
