@@ -32,6 +32,7 @@ const promise4 = new Promise((resolve,rej)=>{
 // })
 
 const resolvedPromisesArray = [Promise.resolve(33), Promise.resolve(44)];
+// const rejectedPromise = [Promise.reject(400), Promise.reject(401)]
 const promiseArray = [promise1,promise2,promise3,promise4]
 // const p = Promise.all(resolvedPromisesArray);
 // Immediately logging the value of p
@@ -43,16 +44,49 @@ const promiseArray = [promise1,promise2,promise3,promise4]
 
 // 
   
-const respromise = Promise.allSettled(promiseArray) 
-respromise.then((val)=>{{
-    console.log(val)
-}}).catch((err)=>{
-    console.log(err)
+// const respromise = Promise.allSettled(promiseArray) 
+// respromise.then((val)=>{{
+//     console.log(val)
+// }}).catch((err)=>{
+//     console.log(err)
+// })
+
+// Promise.allSettled([Promise.reject(499), Promise.resolve(2)]).then((val)=>{
+//     console.log(val)
+// }).catch((err)=>{
+//   console.log(err)
+// })
+     
+// Promise.any(resolvedPromisesArray).then((value)=>{
+//     console.log(value)
+// })
+
+const promiseA = new Promise((resolve,reject)=>{
+    setTimeout(() => {
+        resolve("promise A")
+    }, 500);
+})
+const promiseB = new Promise((resolve,reject)=>{
+    setTimeout(() => {
+        resolve("promise B")
+    }, 300);
 })
 
-Promise.allSettled([Promise.reject(499), Promise.resolve(2)]).then((val)=>{
-    console.log(val)
+function sleep(time, value, state){
+    return new Promise((resolve, reject)=>{
+        if(state?.trim() === "fullfill"){
+            resolve(value)
+        }else{
+            reject(404)
+        }
+    })
+}
+
+const p1 = sleep("500", 34, "fullfill")
+const p2 = sleep("200", 654, "rej")
+
+Promise.race([p1,p2]).then((val)=>{
+  console.log(val)
 }).catch((err)=>{
-  console.log(err)
+    console.log(err)
 })
-     
